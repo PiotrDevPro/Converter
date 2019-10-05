@@ -38,7 +38,7 @@ public class FavoriteNav extends AppCompatActivity {
 
     //   ArrayList<FavoriteItem> mFavoriteList;
   // private RecyclerView rv_favorite;
-  // private FavoriteAdapter favoriteAdapter;
+   private FavoriteAdapter favoriteAdapter;
     SharedPreferences shared;
 
     //   public FavoriteAdapter mAdapter;
