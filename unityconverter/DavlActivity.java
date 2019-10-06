@@ -10,6 +10,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -27,10 +29,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.piotrdevelop.unityconverter.Class.ExampleAdapter;
+import com.piotrdevelop.unityconverter.Class.ExampleItem;
+import com.piotrdevelop.unityconverter.FavoriteNav;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class DavlActivity extends AppCompatActivity implements TextWatcher {
 
@@ -39,11 +49,12 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
     Spinner spMassa;
     EditText edNum, edAtm, edBar, edPa, edMmhg, edKgM, edKvFut, edKvDuim, edMmH2O, edMPa, edKgfcm, edKPa, etText;
     ToggleButton tb;
-    DatabaseHelper myDB;
     // JSONObject saved = new JSONObject();
     SharedPreferences shared;
     SharedPreferences.Editor ed;
     Button sv_button, btn_view;
+
+
 
     public BigDecimal roundUp(double value, int digits) {
         return new BigDecimal("" + value).setScale(digits, BigDecimal.ROUND_HALF_UP);
@@ -51,6 +62,9 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
 
     public static final String Checked = "Checked";
     private boolean switchOnOff;
+    ArrayList<ExampleItem> mmExampleList;
+    private ExampleAdapter mAdapter;
+    private RecyclerView mmRecyclerView;
 
 
     @Override
@@ -64,6 +78,7 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
         CoordinatorLayout corLoyDlinna = (CoordinatorLayout) findViewById(R.id.corLoyoutDavl);
         setSupportActionBar(my_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        loadData();
 
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
@@ -795,15 +810,25 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                 //   EditText line1 = findViewById(R.id.ed1);
+                  //  EditText line2 = findViewById(R.id.ed2);
+                    EditText line1 = findViewById(R.id.edAtm);
+                    EditText line2 = findViewById(R.id.edKPa);
+
+                    insertItem(line1.getText().toString(),line2.getText().toString());
 
                     getSaveCheckedFavorite();
+
+                   SaveData();
+
 
 
                 }
                 if (!isChecked) {
 
                     getSaveCheckedFavorite();
-                    //   Snackbar.make(buttonView,"Remove from Added",Snackbar.LENGTH_LONG).show();
+                  //  loadData();
+                  //  SaveData();
                 }
             }
         });
@@ -815,20 +840,6 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
 
 
     }
-
-    public void AddData(String newEntry){
-
-        boolean insertData = myDB.addData(newEntry);
-
-        if(insertData == true){
-            Toast.makeText(DavlActivity.this, "SuccessFully Entered Data", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(DavlActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
-
 
 
         @Override
@@ -886,7 +897,6 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
             shared = getSharedPreferences("Shared_Pref", MODE_PRIVATE);
             ed = shared.edit();
             ed.putBoolean(Checked, tb.isChecked());
-            //  ed.putString("Value", tb.getBackground().toString());
             ed.apply();
         }
 
@@ -900,17 +910,36 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
             tb.setChecked(switchOnOff);
         }
 
-//        private void init () {
-//
-//            shared = getSharedPreferences("text", Context.MODE_PRIVATE);
-//            ed = shared.edit();
-//            etText = findViewById(R.id.etText);
-//            sv_button = findViewById(R.id.sv_button);
-//            clr_button = findViewById(R.id.btn_clear);
-//            // edNum
-//            //  ed.putBoolean(Checked,tb.isChecked());
-//            // ed.apply();
-//        }
+
+        private void SaveData(){
+
+            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(mmExampleList);
+            editor.putString("task list", json);
+            editor.apply();
+        }
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("task list", null);
+        Type type = new TypeToken<ArrayList<ExampleItem>>() {
+        }.getType();
+        mmExampleList = gson.fromJson(json, type);
+
+        if (mmExampleList == null) {
+            mmExampleList = new ArrayList<>();
+        }
+
+    }
+
+    private void insertItem(String line1, String line2){// String line3) {
+        mmExampleList.add(new ExampleItem(line1, line2)); //line3));
+        mAdapter.notifyItemInserted(mmExampleList.size());
+        SaveData();
+    }
 
 }
 

@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
-import androidx.annotation.NonNull;
+
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.navigation.NavigationView;
@@ -17,7 +17,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatDelegate;
+
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 {
 
 
-    Button btnDlinna, btnMassa, btnObiem, btnPloshad, btnRasxod, btnSpeed, btnTemp, btnHz, btnDavl, btnInfo, btnYgol, btnEnergy, btnKrut, btnPerc, btnObuv, btnSvet, btnTime, btnRad, btnKod, btnPlot, btnSila, btnProc, btnSkidki, btnBiz, btnStream, btnPower;
+    Button btnDlinna, btnMassa, btnObiem, btnPloshad, btnRasxod, btnSpeed, btnTemp, btnHz, btnDavl, btnInfo, btnYgol, btnEnergy, btnKrut, btnPerc, btnObuv, btnSvet, btnTime, btnRad, btnKod, btnPlot, btnSila, btnProc, btnSkidki, btnBiz, btnStream, btnPower,btnTest;
     TextView tvbase, tvEng, tveng2;
     Toolbar toolbar;
     CollapsingToolbarLayout bottomToolbar;
@@ -142,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPower = (Button) findViewById(R.id.btnPower);
         btnPower.setTypeface(myTypeface);
 
+        btnTest = findViewById(R.id.btnTest);
+
 
 //        sharedPreferences = getSharedPreferences("ColorSetting",MODE_PRIVATE);
 //        editor = sharedPreferences.edit();
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnBiz.setOnClickListener(this);
         btnStream.setOnClickListener(this);
         btnPower.setOnClickListener(this);
+        btnTest.setOnClickListener(this);
 
         if (getColor() != getResources().getColor(R.color.colorPrimary)) {
 
@@ -275,12 +278,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.menu1:
                 openDialogTheme();
                 break;
-
-      //      case R.id.favorite:
-
-        //        break;
         }
-//
         return super.onOptionsItemSelected(item);
     }
 
@@ -469,17 +467,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(IPOW);
                 break;
 
-            //     case R.id.btnDlinnaLine:
-
-            //    Intent IBDL = new Intent(this, WaveLineActivity.class);
-            //  startActivity(IBDL);
-
-            //    break;
-
-/*            case R.id.btnsearch:
-                Intent ISR = new Intent(this, SearchResultActivity.class);
-                startActivity(ISR);
-                break;*/
+            case R.id.btnTest:
+                Intent Test = new Intent(this, FavoriteNav.class);
+                startActivity(Test);
+                break;
 
         }
 
