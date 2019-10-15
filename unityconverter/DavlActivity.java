@@ -2,45 +2,35 @@ package com.piotrdevelop.unityconverter;
 
 
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.piotrdevelop.unityconverter.Class.ExampleAdapter;
-import com.piotrdevelop.unityconverter.Class.ExampleItem;
-import com.piotrdevelop.unityconverter.FavoriteNav;
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+
+
 
 public class DavlActivity extends AppCompatActivity implements TextWatcher {
 
@@ -49,11 +39,10 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
     Spinner spMassa;
     EditText edNum, edAtm, edBar, edPa, edMmhg, edKgM, edKvFut, edKvDuim, edMmH2O, edMPa, edKgfcm, edKPa, etText;
     ToggleButton tb;
-    // JSONObject saved = new JSONObject();
     SharedPreferences shared;
     SharedPreferences.Editor ed;
-    Button sv_button, btn_view;
-
+    private SQLiteDatabase mDatabase;
+    private int mAmount = 0;
 
 
     public BigDecimal roundUp(double value, int digits) {
@@ -61,16 +50,13 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
     }
 
     public static final String Checked = "Checked";
-    private boolean switchOnOff;
-    ArrayList<ExampleItem> mmExampleList;
-    private ExampleAdapter mAdapter;
-    private RecyclerView mmRecyclerView;
-
+    public static boolean switchOnOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.davlenie);
+
 
         Toolbar my_toolbar = (Toolbar) findViewById(R.id.my_toolbar_app);
         RelativeLayout backColorlayoutAds = (RelativeLayout) findViewById(R.id.reLayoutDavlAds);
@@ -78,12 +64,12 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
         CoordinatorLayout corLoyDlinna = (CoordinatorLayout) findViewById(R.id.corLoyoutDavl);
         setSupportActionBar(my_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        loadData();
 
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,// data);
                 // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -119,7 +105,6 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
         edKvFut = (EditText) findViewById(R.id.edKvFut);
         edKvDuim = (EditText) findViewById(R.id.edKvDuim);
         edKgfcm = (EditText) findViewById(R.id.edKgfcm);
-
 
         if (getColor() != getResources().getColor(R.color.colorPrimary)) {
 
@@ -796,150 +781,64 @@ public class DavlActivity extends AppCompatActivity implements TextWatcher {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.item, menu);
+    public int getColor() {
+        SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
+        int selectedColor = mSharedPref.getInt("color", getResources().getColor(R.color.brown_colorPrimary));
+        return selectedColor;
+    }
 
+    private int getBackgroundColor() {
+        SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
+        int selectedBackColor = mSharedPref.getInt("backcolor", getResources().getColor(R.color.dark_backgroundColorActivity));
+        return selectedBackColor;
+    }
 
-        MenuItem itemSwitch = menu.findItem(R.id.favorite);
-        itemSwitch.setActionView(R.layout.toggle_button_favorite);
-        tb = (ToggleButton) menu.findItem(R.id.favorite).getActionView().findViewById(R.id.favorite_switch);
-        tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    private int getTextColor() {
 
-                if (isChecked) {
-                 //   EditText line1 = findViewById(R.id.ed1);
-                  //  EditText line2 = findViewById(R.id.ed2);
-                    EditText line1 = findViewById(R.id.edAtm);
-                    EditText line2 = findViewById(R.id.edKPa);
-
-                    insertItem(line1.getText().toString(),line2.getText().toString());
-
-                    getSaveCheckedFavorite();
-
-                   SaveData();
-
-
-
-                }
-                if (!isChecked) {
-
-                    getSaveCheckedFavorite();
-                  //  loadData();
-                  //  SaveData();
-                }
-            }
-        });
-
-
-        getLoadCheckedFavorite();
-        updateView();
-        return true;
+        SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
+        int textColor = mSharedPref.getInt("textColorMain", getResources().getColor(R.color.dark_textColorActivity));
+        return textColor;
 
 
     }
 
+    private int getEditTextColor() {
 
-        @Override
-        public boolean onOptionsItemSelected (MenuItem item){
+        SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
+        int textColor = mSharedPref.getInt("textEditColor", getResources().getColor(R.color.dark_editTextActivity));
+        return textColor;
 
-
-            int id = item.getItemId();
-            {
-
-            }
-//
-            return super.onOptionsItemSelected(item);
-        }
-
-
-        public int getColor () {
-            SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
-            int selectedColor = mSharedPref.getInt("color", getResources().getColor(R.color.brown_colorPrimary));
-            return selectedColor;
-        }
-
-        private int getBackgroundColor () {
-            SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
-            int selectedBackColor = mSharedPref.getInt("backcolor", getResources().getColor(R.color.dark_backgroundColorActivity));
-            return selectedBackColor;
-        }
-
-        private int getTextColor () {
-
-            SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
-            int textColor = mSharedPref.getInt("textColorMain", getResources().getColor(R.color.dark_textColorActivity));
-            return textColor;
-
-
-        }
-
-        private int getEditTextColor () {
-
-            SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
-            int textColor = mSharedPref.getInt("textEditColor", getResources().getColor(R.color.dark_editTextActivity));
-            return textColor;
-
-
-        }
-
-        private int getEditTextActivityColor () {
-
-            SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
-            int textColor = mSharedPref.getInt("textEditColorActivity", getResources().getColor(R.color.dark_editTextColorActivity));
-            return textColor;
-
-        }
-
-        public void getSaveCheckedFavorite () {
-            shared = getSharedPreferences("Shared_Pref", MODE_PRIVATE);
-            ed = shared.edit();
-            ed.putBoolean(Checked, tb.isChecked());
-            ed.apply();
-        }
-
-        public void getLoadCheckedFavorite () {
-            shared = getSharedPreferences("Shared_Pref", MODE_PRIVATE);
-            switchOnOff = shared.getBoolean(Checked, false);
-
-        }
-
-        public void updateView () {
-            tb.setChecked(switchOnOff);
-        }
-
-
-        private void SaveData(){
-
-            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(mmExampleList);
-            editor.putString("task list", json);
-            editor.apply();
-        }
-
-    private void loadData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("task list", null);
-        Type type = new TypeToken<ArrayList<ExampleItem>>() {
-        }.getType();
-        mmExampleList = gson.fromJson(json, type);
-
-        if (mmExampleList == null) {
-            mmExampleList = new ArrayList<>();
-        }
 
     }
 
-    private void insertItem(String line1, String line2){// String line3) {
-        mmExampleList.add(new ExampleItem(line1, line2)); //line3));
-        mAdapter.notifyItemInserted(mmExampleList.size());
-        SaveData();
+    private int getEditTextActivityColor() {
+
+        SharedPreferences mSharedPref = getSharedPreferences("ThemeColor", MODE_PRIVATE);
+        int textColor = mSharedPref.getInt("textEditColorActivity", getResources().getColor(R.color.dark_editTextColorActivity));
+        return textColor;
+
     }
+
+    public void getSaveCheckedFavorite() {
+        shared = getSharedPreferences("Shared_Pref", MODE_PRIVATE);
+        ed = shared.edit();
+        ed.putBoolean(Checked, tb.isChecked());
+        // int a = shared.getInt("save",0);
+        ed.apply();
+    }
+
+    public void getLoadCheckedFavorite() {
+        shared = getSharedPreferences("Shared_Pref", MODE_PRIVATE);
+        switchOnOff = shared.getBoolean(Checked, false);
+        //   int a = shared.getInt("save",1);
+
+    }
+
+    public void updateView() {
+        tb.setChecked(switchOnOff);
+    }
+
 
 }
 

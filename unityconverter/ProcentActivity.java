@@ -72,19 +72,15 @@ public class ProcentActivity extends AppCompatActivity implements TextWatcher, V
             myBtnClear.setBackgroundColor(getColor());
             myBtnClear.setTextColor(getTextColor());
 
-
             tv1.setTextColor(getTextColor());
             tv2.setTextColor(getTextColor());
-
 
             edNum.setBackgroundColor(getEditTextActivityColor());
             edNum.setTextColor(getEditTextColor());
             edPerc.setBackgroundColor(getEditTextActivityColor());
             edPerc.setTextColor(getEditTextColor());
             edResult.setBackgroundColor(getEditTextActivityColor());
-        //    edResult.setTextColor(getEditTextColor());
-
-
+            edResult.setTextColor(getEditTextColor());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(getColor());
@@ -94,9 +90,6 @@ public class ProcentActivity extends AppCompatActivity implements TextWatcher, V
         edPerc.addTextChangedListener(this);
         edNum.addTextChangedListener(this);
         myBtnClear.setOnClickListener(this);
-
-
-
     }
 
     @Override
@@ -165,9 +158,6 @@ public class ProcentActivity extends AppCompatActivity implements TextWatcher, V
         edNum.setText("");
         edPerc.setText("");
         edNum.requestFocus();
-
-
-
 
     }
 

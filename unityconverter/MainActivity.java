@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 {
 
 
-    Button btnDlinna, btnMassa, btnObiem, btnPloshad, btnRasxod, btnSpeed, btnTemp, btnHz, btnDavl, btnInfo, btnYgol, btnEnergy, btnKrut, btnPerc, btnObuv, btnSvet, btnTime, btnRad, btnKod, btnPlot, btnSila, btnProc, btnSkidki, btnBiz, btnStream, btnPower,btnTest;
+    Button btnDlinna, btnMassa, btnObiem, btnPloshad, btnRasxod, btnSpeed, btnTemp, btnHz, btnDavl, btnInfo, btnYgol, btnEnergy, btnKrut, btnPerc, btnObuv, btnSvet, btnTime, btnRad, btnKod, btnPlot, btnSila, btnProc, btnSkidki, btnBiz, btnStream, btnPower;
     TextView tvbase, tvEng, tveng2;
     Toolbar toolbar;
     CollapsingToolbarLayout bottomToolbar;
@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnClose;
     DrawerLayout drawer;
     NavigationView navView;
-    ActionBarDrawerToggle toggle;
     Intent shareIntent;
 
 
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        // setTheme(Constant.theme);
         setContentView(R.layout.main);
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
@@ -75,15 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         navView = (NavigationView) findViewById(R.id.new_view);
         navView.setNavigationItemSelectedListener(this);
 
-//        getSupportActionBar().setSubtitle(R.string.app_name);
-        //   getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        //    }
         Typeface myTypeface = Typeface.createFromAsset(getAssets(), "HelveticaNeueCyr-Light.otf");
         Typeface myTypeface2 = Typeface.createFromAsset(getAssets(), "HelveticaNeueCyr-LightItalic.otf");
 
-        //      methods = new Methods();
 
         btnDlinna = (Button) findViewById(R.id.btnDlinna);
         btnDlinna.setTypeface(myTypeface);
@@ -142,14 +134,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPower = (Button) findViewById(R.id.btnPower);
         btnPower.setTypeface(myTypeface);
 
-        btnTest = findViewById(R.id.btnTest);
-
-
-//        sharedPreferences = getSharedPreferences("ColorSetting",MODE_PRIVATE);
-//        editor = sharedPreferences.edit();
-
-//        colorize();
-
         tvbase = (TextView) findViewById(R.id.tvbase);
         tvbase.setTypeface(myTypeface2);
         tvEng = (TextView) findViewById(R.id.tvEng);
@@ -185,12 +169,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnBiz.setOnClickListener(this);
         btnStream.setOnClickListener(this);
         btnPower.setOnClickListener(this);
-        btnTest.setOnClickListener(this);
-
         if (getColor() != getResources().getColor(R.color.colorPrimary)) {
 
             toolbar.setBackgroundColor(getColor());
             bottomToolbar.setBackgroundColor(getColor());
+            mLayout.setBackgroundColor(getColor());
+
             mLayout.setBackgroundColor(getBackgroundColor());
             btnDlinna.setTextColor(getTextColor());
             btnDlinna.setBackgroundColor(getStrokeButtonColor());
@@ -247,14 +231,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             btnBiz.setTextColor(getTextColor());
             btnBiz.setBackgroundColor(getStrokeButtonColor());
             tvbase.setTextColor(getTextColor());
+            tvEng.setTextColor(getTextColor());
+            tveng2.setTextColor(getTextColor());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(getColor());
             }
 
         }
-
-
 
     }
 
@@ -299,22 +283,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent YI = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=ibqc0FFqnms&feature=youtu.be"));
             startActivity(YI);
 //
-//
-      //  } else if (id == R.id.nav_pro) {
-
-       //     Toast.makeText(getApplicationContext(), " proVersion ", Toast.LENGTH_SHORT).show();
-       //    overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-
-
-       } else if (id == R.id.nav_favorite) {
-
-
-            Intent Fav = new Intent(this,FavoriteNav.class);
-            startActivity(Fav);
-
-
-//
-//        } else if (id == R.id.nav_manage) {
+//      } else if (id == R.id.nav_pro) {
+//      } else if (id == R.id.nav_favorite) {
+//      } else if (id == R.id.nav_manage) {
 
        } else if (id == R.id.nav_share) {
 
@@ -326,12 +297,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(Intent.createChooser(shareIntent,"Share Via"));
 
         } else if (id == R.id.nav_send) {
-
-            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
             Intent intent=new Intent(Intent.ACTION_SEND);
             intent.setData(Uri.parse("mailto:"));
             String[] to={"proplaya7880281@gmail.com"};
-            //int ver=@string/;
             intent.putExtra(Intent.EXTRA_EMAIL, to);
             intent.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.app_name));
             intent.putExtra(Intent.EXTRA_TEXT,"");
@@ -465,11 +433,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 Intent IPOW = new Intent(this, PowerActivity.class);
                 startActivity(IPOW);
-                break;
-
-            case R.id.btnTest:
-                Intent Test = new Intent(this, FavoriteNav.class);
-                startActivity(Test);
                 break;
 
         }

@@ -86,7 +86,7 @@ public class SkidkiActivity extends AppCompatActivity implements TextWatcher, Vi
             edResult.setBackgroundColor(getEditTextActivityColor());
             edResult.setTextColor(getEditTextColor());
             edResult2.setBackgroundColor(getEditTextActivityColor());
-         //   edResult2.setTextColor(getEditTextColor());
+            edResult2.setTextColor(getEditTextColor());
 
 
 

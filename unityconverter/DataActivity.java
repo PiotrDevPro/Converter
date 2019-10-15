@@ -1,6 +1,9 @@
 package com.piotrdevelop.unityconverter;
 
+import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -10,18 +13,26 @@ import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.math.BigDecimal;
+
+import static android.provider.BaseColumns._ID;
+import static com.piotrdevelop.unityconverter.DavlActivity.Checked;
+import static com.piotrdevelop.unityconverter.DavlActivity.switchOnOff;
 
 public class DataActivity extends AppCompatActivity implements TextWatcher{
 
@@ -29,6 +40,11 @@ public class DataActivity extends AppCompatActivity implements TextWatcher{
     Spinner spMassa;
     EditText edNum,bps,kbps,Mbps,Gbps,Tbps,bsec,kbsec,mbsec,gbsec,tbsec,modemV92,ISDN,GPRS,EDGE,BlueTooth1,BlueTooth2,ADSL,USB1,UMTS,ADSL2,T1,E1,Ethernet10,CableModem,WiFi80211g,Ethernet100,USB2,wifi801n,HSPA,Ethernet1000,USB3,Ethernet10G,Ethernet40G;
   //  TextView tvPosName;
+   // private SQLiteDatabase mDatabase;
+  //  private int mAmount = 0;
+    SharedPreferences shared;
+    SharedPreferences.Editor ed;
+    ToggleButton tb;
 
     public BigDecimal roundUp(double value, int digits) {
         return new BigDecimal("" + value).setScale(digits, BigDecimal.ROUND_HALF_UP);
@@ -40,6 +56,7 @@ public class DataActivity extends AppCompatActivity implements TextWatcher{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.data);
 
+
         Toolbar my_toolbar = (Toolbar) findViewById(R.id.my_toolbar_app);
         RelativeLayout backColorlayoutAds = (RelativeLayout) findViewById(R.id.reLayoutDataAds);
         CollapsingToolbarLayout bottomColorLayout = (CollapsingToolbarLayout) findViewById(R.id.DataBottomLayout);
@@ -47,6 +64,7 @@ public class DataActivity extends AppCompatActivity implements TextWatcher{
 
         setSupportActionBar(my_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -2625,6 +2643,7 @@ public class DataActivity extends AppCompatActivity implements TextWatcher{
 
     }
 
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -5034,5 +5053,6 @@ public class DataActivity extends AppCompatActivity implements TextWatcher{
         return textColor;
 
     }
+
 
 }

@@ -115,18 +115,18 @@ public class BizznessActivity extends AppCompatActivity implements TextWatcher,V
             edKol.setBackgroundColor(getEditTextActivityColor());
             edKol.setTextColor(getEditTextColor());
             edCenaNac.setBackgroundColor(getEditTextActivityColor());
-           // edCenaNac.setTextColor(getEditTextColor());
+            edCenaNac.setTextColor(getEditTextColor());
             edNac.setBackgroundColor(getEditTextActivityColor());
             edNac.setTextColor(getEditTextColor());
 
             edPribil.setBackgroundColor(getEditTextActivityColor());
-           // edPribil.setTextColor(getEditTextColor());
+            edPribil.setTextColor(getEditTextColor());
             edNalog.setBackgroundColor(getEditTextActivityColor());
             edNalog.setTextColor(getEditTextColor());
             edPribilCh.setBackgroundColor(getEditTextActivityColor());
-          //  edPribilCh.setTextColor(getEditTextColor());
+            edPribilCh.setTextColor(getEditTextColor());
             edCenaObs.setBackgroundColor(getEditTextActivityColor());
-         //   edCenaObs.setTextColor(getEditTextColor());
+            edCenaObs.setTextColor(getEditTextColor());
 
 
 
